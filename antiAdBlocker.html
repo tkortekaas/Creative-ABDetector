@@ -1,0 +1,91 @@
+<style>
+    #antiAdBlocker {
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        border-radius: unset;
+        background: rgb(63, 176, 172, 0.95);
+        z-index: 1;
+    }
+
+    #antiAdBlocker div {
+        width: 50%;
+        top: 25%;
+        color: #173e43;
+        background-color: #dddfd4;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        text-decoration: none;
+    }
+
+    #antiAdBlocker button {
+        border-radius: 5px;
+        padding: 15px 25px;
+        font-size: 22px;
+        text-decoration: none;
+        margin: 20px;
+        position: relative;
+        display: inline-block;
+        background-color: #fae596;
+        color: #173e43;
+    }
+</style>
+<script src="ads.js" type="text/javascript"></script>
+<script async defer>
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    var accept = getCookie("accept");
+    if (accept != "true" && typeof adsLoaded == "undefined") {
+        var e = document.createElement('div');
+        e.id = 'antiAdBlocker';
+        e.innerHTML =
+            '<div><p>Please disable your ad-blocker or answer this question to help keep this site free!</p><p>Question</p><form><label><input value="A" name="answer1" type="radio">Answer A</label><br><label><input value="B" name="answer1" type="radio">Answer B</label><br><label><input value="C" name="answer1" type="radio">Answer C</label><br><button type="button" onclick="blockerAnswer()">Go to page</button></form></div>';
+        document.body.appendChild(e);
+    }
+
+    function blockerAnswer() {
+        let answer;
+        let answers = document.getElementsByName("answer1");
+
+        for (var i = 0, length = answers.length; i < length; i++) {
+            if (answers[i].checked) {
+                answer = answers[i].value;
+                break;
+            }
+        }
+        if (answer == "")
+            return;
+        var http = new XMLHttpRequest();
+        http.open('POST', 'https://www.yourwebsite.com/antiAdBlocker.php');
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4 && http.status == 200) {
+                if (http.responseText.toString() == "valid") {
+                    document.getElementById("antiAdBlocker").style.display = "none";
+                    var d = new Date();
+                    d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+                    var expires = "expires=" + d.toUTCString();
+                    document.cookie = "accept=true;" + expires + ";path=/";
+                }
+            }
+        }
+        http.send("answer1=" + answer);
+    }
+</script>
