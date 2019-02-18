@@ -55,8 +55,12 @@
     if (accept != "true" && typeof adsLoaded == "undefined") {
         var e = document.createElement('div');
         e.id = 'antiAdBlocker';
+        var question = "Question";
+        var answerA = "A";
+        var answerB = "B";
+        var answerC = "C";
         e.innerHTML =
-            '<div><p>Please disable your ad-blocker or answer this question to help keep this site free!</p><p>Question</p><form><label><input value="A" name="answer1" type="radio">Answer A</label><br><label><input value="B" name="answer1" type="radio">Answer B</label><br><label><input value="C" name="answer1" type="radio">Answer C</label><br><button type="button" onclick="blockerAnswer()">Go to page</button></form></div>';
+            '<div><p>Please disable your ad-blocker or answer this question to help keep this site free!</p><p>'+question+'</p><form><label><input value="'+answerA+'" name="answer1" type="radio">'+answerA+'</label><br><label><input value="'+answerB+'" name="answer1" type="radio">'+answerB+'</label><br><label><input value="'+answerC+'" name="answer1" type="radio">'+answerC+'</label><br><button type="button" onclick="blockerAnswer()">Go to page</button></form></div>';
         document.body.appendChild(e);
     }
 
